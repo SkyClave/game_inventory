@@ -130,5 +130,7 @@ Untuk detail dapat dilihat di [sini](main/tests.py)
 
 
 # Alasan penggunaan virtual environment dan apa yang terjadi jika tidak menggunakan virtual environment
+Penggunaan virtual environment bertujuan untuk membatasi proyek dari global environment python. Jika kita membuat banyak proyek dengan berbagai dependensi yang berbeda, maka lebih efektif membuat virtual environment untuk setiap proyek yang ada. Dengan terpisahnya dependensi antar proyek, maka developer dapat bekerja dengan python dan package yang versinya berbeda-beda sesuai kebutuhan proyek.
+Jika tidak menggunakan virtual environment, kita tetap dapat membuat proyek Django. Namun terdapat risiko konflik dependensi antar proyek dan konflik versi package.
 
 # MVC, MVT, MVVM dan perbedaan dari ketiganya
