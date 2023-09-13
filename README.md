@@ -131,7 +131,7 @@ Sebelum deploy ke adaptable, pertama dibuat repositori baru di Github. Lalu saya
 Selanjutnya saya menuju website Adaptable. Saya lalu membuat app baru dengan menghubungkan dengan repositori di Github. Setting yang digunakan untuk deploy app : Python App Template, tipe basis data PostgreSQL, versi Python 3.11, start command ```python manage.py migrate && gunicorn game_inventory.wsgi```, dan HTTP Listener on PORT = Yes.
 
 # Bagan request Client ke aplikasi Django dan responnya
-![alt text](images/week2/bagan.png)
+![alt text](images/week2/bagan.jpg)
 Ketika ada request dari user, request akan masuk ke urls.py yang akan mengambil path url yang direquest user dan mengarahkannya ke path yang sesuai. Lalu Django akan mengakses views.py sesuai path url yang dituju. Views.py akan merender kode html dari templates yang ditambahkan dengan data yang ada. Lalu Django akan mengembalikan kode html yang sudah ditambahkan data kepada user sebagai response.
 
 # Alasan penggunaan virtual environment dan apa yang terjadi jika tidak menggunakan virtual environment
