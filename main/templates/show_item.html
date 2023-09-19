@@ -1,13 +1,6 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %} 
 
 {% block content %}
-
-    <h1>Artifact Game Inventory</h1>
-	
-    <p>Nama : {{ nama }}</p>
-	
-    <p>Kelas : {{ kelas }}</p>
-	
 	<p>Ada total {{ item_counter }} item pada aplikasi ini</p>
 	
 	<table>
@@ -28,12 +21,4 @@
 		{% endfor %}
 	</table>
 
-	<br />
-
-	<a href="{% url 'main:create_item' %}">
-		<button>
-			Add New Item
-		</button>
-	</a>
-
-{% endblock content %}
+{% endblock %}
