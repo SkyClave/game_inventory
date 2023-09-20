@@ -9,9 +9,11 @@ from django.core import serializers
 def show_main(request):
     items = Item.objects.all()
     item_counter = items.count()
+    item_sum = sum([item.amount for item in items])
     context = {
         'nama': 'Alwin Djuliansah',
         'kelas': 'PBP D',
+        'item_sum': item_sum,
         'item_counter': item_counter,
         'items': items,
         #'name': 'The Art of War',
@@ -34,8 +36,10 @@ def create_item(request):
 def show_html(request):
     items = Item.objects.all()
     item_counter = items.count()
+    item_sum = sum([item.amount for item in items])
     context = {
         'item_counter': item_counter,
+        'item_sum': item_sum,
         'items': items,
     }
     return render(request, "show_item.html", context)

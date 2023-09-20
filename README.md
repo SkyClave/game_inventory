@@ -73,8 +73,10 @@ Menambahkan fungsi-fungsi berikut pada views.py :
 def show_html(request):
     items = Item.objects.all()
     item_counter = items.count()
+    item_sum = sum([item.amount for item in items])
     context = {
         'item_counter': item_counter,
+        'item_sum': item_sum,
         'items': items,
     }
     return render(request, "show_item.html", context)
