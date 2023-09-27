@@ -1,6 +1,120 @@
-Link Adaptable:
-https://gameartifactinventory.adaptable.app/main/
+# Tugas 4
 
+## Proses implementasi checklist tugas
+
+### Mengimplementasikan fungsi registrasi, login, dan logout serta menampilkan data user dan cookie seperti last login
+
+Untuk fungsi register, dimanfaatkan UserCreationForm formulir bawaan dari Django untuk registrasi user. Lalu dibuat template html untuk form register lalu dibuat fungsi register menambahkan UserCreationForm pada template html di views.py main lalu ditambahkan routing di urls.py.
+
+Untuk fungsi login, dibuat form login sendiri dengan membuat langsung di template html form dengan field username dan password. Lalu dibuat fungsi login dengan import authenticate di views.py dan dilakukan routing juga. Untuk menampilkan data user dan last login, ditambahkan pada setiap login dicatat waktu login sebagai cookie, lalu main.html dan show_main diubah context dan variabelnya untuk menampilkan username dan last login.
+
+Selanjutnya dilakukan restriksi halaman main dengan menambahkan ```@login_required(login_url='/login')``` di atas fungsi show_main.
+
+Untuk logout, dibuat tambahan button yang dihubungkan dengan routing logout di urls.py. Lalu dibuat fungsi logout di views.py yang dirouting di urls.py. Saat logout data cookie last login dihapus.
+
+Isi fungsi register, login, dan logout di views.py adalah :
+```
+def register(request):
+    form = UserCreationForm()
+
+    if request.method == "POST":
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'Your account has been successfully created!')
+            return redirect('main:login')
+    context = {'form':form}
+    return render(request, 'register.html', context)
+
+def login_user(request):
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            response = HttpResponseRedirect(reverse("main:show_main")) 
+            response.set_cookie('last_login', str(datetime.datetime.now()))
+            return response
+        else:
+            messages.info(request, 'Incorrect username or password. Please try again.')
+    context = {}
+    return render(request, 'login.html', context)
+    
+def logout_user(request):
+    logout(request)
+    response = HttpResponseRedirect(reverse('main:login'))
+    response.delete_cookie('last_login')
+    return response
+```
+
+### Menghubungkan model Item dengan User dan membuat dua akun pengguna dengan masing-masing tiga dummy data menggunakan model
+
+Membuat dua user baru dengan akses url register. Lalu pada models.py ditambahkan field user seperti berikut
+```
+user = models.ForeignKey(User, on_delete=models.CASCADE)
+```
+Lalu mengubah create_item agar item yang dibuat sesudah perubahan model dilink ke user yang membuatnya dan show_main menambahkan filter agar suatu item hanya dapat dilihat user yang terkait. Selanjutnya melakukan migrasi dan menghubungkan item yang sudah ada sebelum migrasi dengan user yang dibuat. Lalu membuat tiga item masing-masing untuk user yang dibuat.
+
+### Implementasi Bonus : Increment, Decrement, Remove
+
+Didefiniskan fungsi pada views.py sebagai berikut:
+```
+@login_required(login_url='/login')
+def add_item(request, id):
+    try:
+        data = Item.objects.filter(user=request.user).filter(pk=id).first()
+        data.amount += 1
+        data.save()
+    finally:
+        return redirect('/')
+
+@login_required(login_url='/login')
+def decrease_item(request, id):
+    try:
+        data = Item.objects.filter(user=request.user).filter(pk=id).first()
+        data.amount -= 1
+        if data.amount <= 0:
+            data.delete()
+            return redirect('/')
+        data.save()
+    finally:
+        return redirect('/')
+
+@login_required(login_url='/login')
+def remove_item(request, id):
+    try:
+        data = Item.objects.filter(user=request.user).filter(pk=id).first()
+        data.delete()
+    finally:
+        return redirect('/')
+```
+Kode di atas mencari item milik user yang login saat itu dengan parameter id, lalu dilakukan perubahan jumlah item dan disimpan. Jika jumlah item menjadi 0 atau remove option, maka item dihapus dari database. Lalu redirect ke main.
+
+Tiga fungsi ini lalu dirouting di urls.py. Pada main.html ditambahkan 3 button di iterasi setiap tabel sebagai berikut dan dihubungkan ke path yang sudah dibuat.
+```
+<td><a href="{% url 'main:add_item' item.id %}"><button>+</button></a></td>
+<td><a href="{% url 'main:decrease_item' item.id %}"><button>-</button></a></td>
+<td><a href="{% url 'main:remove_item' item.id %}"><button>Remove</button></a></td>
+```
+
+## Pertanyaan
+
+### Apa itu Django UserCreationForm, dan jelaskan apa kelebihan dan kekurangannya?
+
+UserCreationForm adalah form bawaan Django yang berguna untuk registrasi user baru. UserCreationForm memiliki kelebihan yaitu user yang dibuat langsung disimpan dalam database dan terintegrasi dalam autentikasi Django. Kekurangannya adalah UserCreationForm hanya form registrasi simpel saja. Ketika kita membutuhkan form registrasi yang lebih kompleks, kita harus mengkustomisasinya sendiri meskipun dapat memanfaatkan inheritance dari UserCreationForm.
+
+### Apa perbedaan antara autentikasi dan otorisasi dalam konteks Django, dan mengapa keduanya penting?
+
+Autentikasi adalah proses verifikasi user, dapat menggunakan kredensial seperti username dan password. Contoh seperti login. Sedangkan otorisasi adalah proses verifikasi akses user ke suatu data atau lainnya setelah autentikasi. Keduanya penting karena untuk menjaga keamanan data aplikasi. Autentikasi memastikan user yang mengakses aplikasi adalah user yang sah, sedangkan otorisasi memastikan akses data user terkontrol dengan baik.
+
+### Apa itu cookies dalam konteks aplikasi web, dan bagaimana Django menggunakan cookies untuk mengelola data sesi pengguna?
+
+Cookies adalah sebuah file penyimpanan yang disimpan pada browser oleh aplikasi web saat kita mengakses aplikasi. Cookies bersifat sementara dan dapat menyimpan data seperti data login pengguna. Django menyimpan id sesi user pada cookies. Hal ini membuat Django dapat mengenali user apabila user mengakses url yang sama kembali.
+
+### Apakah penggunaan cookies aman secara default dalam pengembangan web, atau apakah ada risiko potensial yang harus diwaspadai?
+
+Penggunaan cookies rawan karena cookies dapat dilihat langsung oleh user. Berarti cookie dapat dicuri dengan mudah apabila user lengah. Namun cookie dapat dienkripsi sehingga aman. Risiko potensial yang harus diwaspadai adalah cookie hijacking / session hijacking yang mencuri cookie user untuk mendapat unauthorized access.
 
 # Tugas 3
 
