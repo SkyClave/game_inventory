@@ -1,3 +1,90 @@
+# Tugas 5
+
+## Proses implementasi checklist Tugas
+
+### Kustomisasi desain pada templat HTML yang telah dibuat pada Tugas 4 dengan menggunakan CSS atau CSS framework
+
+Untuk kustomisasi desain html, digunakan Bootstrap. Pertama ditambahkan bootstrap ke aplikasi dengan memasukkannya di template base.html di root. Ditambahkan script dalam [link ini](https://getbootstrap.com/docs/5.3/getting-started/introduction/).
+
+``` <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous"> ```
+
+pada head 
+
+```<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>```
+
+pada body
+
+base.html juga diubah menjadi color theme dark.
+
+### Kustomisasi halaman login, register, dan tambah inventori semenarik mungkin
+
+Halaman login, register, dan tambah inventori diubah menjadi approach card dengan title halaman sebagai card header dan form login/register/tambah inventori sebagai card body.
+
+Contoh seperti pada halaman register, cardnya seperti ini:
+
+```
+<div class="card">
+	<div class="card-header">
+		<h1 class="text-left">Register</h1>
+	</div>
+    <div class="card-body">
+		<main class="form-signin w-100 m-auto">
+			<form method="POST" >  
+				{% csrf_token %}  
+				<table class="table">
+					{{ form.as_table }}  
+					<tr>  
+						<td></td>
+						<td>
+							<div class="text-left">
+								<button class="btn btn-primary" type="submit">Daftar</button>
+							</div>
+						</td>  
+					</tr>  
+				</table>  
+			</form>
+		</main>
+		{% if messages %}
+			<div class="alert alert-danger mt-3">
+				<ul>   
+					{% for message in messages %}  
+						<li>{{ message }}</li>  
+						{% endfor %}  
+				</ul>
+			</div>
+		{% endif %}
+	</div>
+</div>
+```
+Untuk halaman login formnya dibuat floating form.
+
+### Kustomisasi halaman daftar inventori menjadi lebih berwarna maupun menggunakan apporach lain
+
+Untuk halaman daftar inventori, dibuat dengan approach card juga. Dibuat 2 container, satu buat isi nama dan banyak total dan jenis item. Yang satu lagi untuk meletakkan card item yang akan ditampilkan. Card satu item terdiri atas card title berisi nama item dan card text berisi jumlah dan deskripsi item. Implementasi sebagai berikut:
+```
+<div class="container mt-5">
+	<div class="row">
+		{% for item in items %}
+		<div class="col-lg-4 mb-4">
+			<div class="card">
+				<div class="card-body">
+					<h3 class="card-title">{{item.name}}<h3>
+					<p class="card-text">Amount : {{item.amount}}</p>
+					<p class="card-text">Description : {{item.description}}</p>
+				</div>
+				<div class="btn-group">
+					<a href="{% url 'main:add_item' item.id %}" class="btn btn-primary">+</a>
+					<a href="{% url 'main:decrease_item' item.id %}" class="btn btn-primary">-</a>
+					<a href="{% url 'main:remove_item' item.id %}" class="btn btn-danger">Remove</a>
+				</div>
+			</div>
+		</div>
+		{% endfor %}
+	</div>
+</div>
+```
+Dibandingkan tugas lalu, tombol logout dan add item di bawah dipindahkan ke atas dan dimasukkan ke navbar bersama nama aplikasi dan username user yang login.
+
 # Tugas 4
 
 ## Proses implementasi checklist tugas

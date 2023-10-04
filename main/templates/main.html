@@ -1,52 +1,62 @@
 {% extends 'base.html' %}
 
+<style>
+	.card-title {
+		color: #007BFF;
+	}
+</style>
+
 {% block content %}
-
-    <h1>Artifact Game Inventory</h1>
+	<nav class="navbar navbar-expand-lg bg-body-tertiary rounded">
+		<div class="container-fluid">
+			<div class="collapse navbar-collapse d-lg-flex" id="header">
+				<a class="navbar-brand col-lg-3 me-0" href="#">Artifact Game Inventory</a>
+				<ul class="navbar-nav col-lg-6 justify-content-lg-center">
+					<li class="nav-item">
+						<a class="nav-link active" aria-current="page" href="#">{{ nama }}</a>
+					</li>
+					<li class="nav-item">
+						<a class="nav-link" href="{% url 'main:create_item' %}">Add Item</a>
+					</li>
+				</ul>
+				<div class="d-lg-flex col-lg-3 justify-content-lg-end">
+					<a class="nav-link" href="{% url 'main:logout' %}" <button class="btn btn-primary">Logout</button></a>
+				</div>
+			</div>
+		</div>
+    </nav>
 	
-    <p>Nama : {{ nama }}</p>
+	<div class = "container mt-5">
+		<div class="card">
+			<div class="card-body">
+				<h1>Artifact List</h1>
+				<p>Username : {{ nama }}</p>
+				<p>Kelas : {{ kelas }}</p>
+				<p>Ada {{ item_counter }} jenis item dalam inventory {{ nama }}</p>
+				<p>Ada total {{ item_sum }} item dalam inventory {{ nama }}</p>
+			</div>
+		</div>
+	</div>
 	
-    <p>Kelas : {{ kelas }}</p>
-	
-	<p>Ada {{ item_counter }} jenis item pada aplikasi ini</p>
-	
-	<p>Ada total {{ item_sum }} item pada aplikasi ini</p>
-	
-	<table>
-		<tr>
-			<th>No</th>
-			<th>Name</th>
-			<th>Amount</th>
-			<th>Description</th>
-		</tr>
-
-		{% for item in items %}
-			<tr>
-				<td>{{forloop.counter}}.</td>
-				<td>{{item.name}}</td>
-				<td>{{item.amount}}</td>
-				<td>{{item.description}}</td>
-				<td><a href="{% url 'main:add_item' item.id %}"><button>+</button></a></td>
-				<td><a href="{% url 'main:decrease_item' item.id %}"><button>-</button></a></td>
-				<td><a href="{% url 'main:remove_item' item.id %}"><button>Remove</button></a></td>
-			</tr>
-		{% endfor %}
-	</table>
-
-	<br />
-
-	<a href="{% url 'main:create_item' %}">
-		<button>
-			Add New Item
-		</button>
-	</a>
-	
-	<h5>Last login: {{ last_login }}</h5>
-	
-	<a href="{% url 'main:logout' %}">
-		<button>
-			Logout
-		</button>
-	</a>
+	<div class="container mt-5">
+		<div class="row">
+			{% for item in items %}
+			<div class="col-lg-4 mb-4">
+				<div class="card">
+					<div class="card-body">
+						<h3 class="card-title">{{item.name}}<h3>
+						<p class="card-text">Amount : {{item.amount}}</p>
+						<p class="card-text">Description : {{item.description}}</p>
+					</div>
+					<div class="btn-group">
+						<a href="{% url 'main:add_item' item.id %}" class="btn btn-primary">+</a>
+						<a href="{% url 'main:decrease_item' item.id %}" class="btn btn-primary">-</a>
+						<a href="{% url 'main:remove_item' item.id %}" class="btn btn-danger">Remove</a>
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		</div>
+	</div>
 
 {% endblock content %}
