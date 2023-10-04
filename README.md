@@ -85,6 +85,13 @@ Untuk halaman daftar inventori, dibuat dengan approach card juga. Dibuat 2 conta
 ```
 Dibandingkan tugas lalu, tombol logout dan add item di bawah dipindahkan ke atas dan dimasukkan ke navbar bersama nama aplikasi dan username user yang login.
 
+### Implementasi Bonus
+
+Edit card untuk mengecek dalam loop apakah loop terakhir atau bukan. Jika iya tambahkan style warna gold ke text di item terakhir. Dari
+```<div class="card">```
+menjadi
+```<div class="card {% if forloop.last %}" style="color: gold;"{% endif %}">```
+
 ## Pertanyaan
 
 ### Jelaskan manfaat dari setiap element selector dan kapan waktu yang tepat untuk menggunakannya.

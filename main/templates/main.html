@@ -1,11 +1,5 @@
 {% extends 'base.html' %}
 
-<style>
-	.card-title {
-		color: #007BFF;
-	}
-</style>
-
 {% block content %}
 	<nav class="navbar navbar-expand-lg bg-body-tertiary rounded">
 		<div class="container-fluid">
@@ -31,6 +25,7 @@
 			<div class="card-body">
 				<h1>Artifact List</h1>
 				<p>Username : {{ nama }}</p>
+				<p>Last login: {{ last_login }}</p>
 				<p>Kelas : {{ kelas }}</p>
 				<p>Ada {{ item_counter }} jenis item dalam inventory {{ nama }}</p>
 				<p>Ada total {{ item_sum }} item dalam inventory {{ nama }}</p>
@@ -42,7 +37,7 @@
 		<div class="row">
 			{% for item in items %}
 			<div class="col-lg-4 mb-4">
-				<div class="card">
+				<div class="card {% if forloop.last %}" style="color: gold;"{% endif %}">
 					<div class="card-body">
 						<h3 class="card-title">{{item.name}}<h3>
 						<p class="card-text">Amount : {{item.amount}}</p>
