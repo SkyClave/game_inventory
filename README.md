@@ -89,8 +89,8 @@ Dibandingkan tugas lalu, tombol logout dan add item di bawah dipindahkan ke atas
 
 ### Jelaskan manfaat dari setiap element selector dan kapan waktu yang tepat untuk menggunakannya.
 - Element selector, untuk memilih elemen dengan tag tertentu. Ini berguna apabila kita ingin memberikan style yang sama pada elemen yang sama tagnya.
-- Class selector, untuk memilih elemen dengan class / karakteristik sama. Ini dapat digunakan apabila kita 
-
+- ID selector, untuk memilih elemen yang tag nya memiliki id tertentu. Karena ID unik untuk setiap elemen. Ini tepat digunakan ketika kita hanya ingin mengubah style dari satu elemen tertentu saja.
+- Class selector, untuk memilih elemen dengan class / karakteristik sama. Ini dapat digunakan apabila kita ingin elemen dengan karakteristik yang sama juga mempunyai style yang sama.
 
 ### Jelaskan HTML5 Tag yang kamu ketahui.
 
@@ -105,7 +105,11 @@ Padding mengosongkan area di sekitar konten, padding mengatur ada ruang kosong a
 
 ### Jelaskan perbedaan antara framework CSS Tailwind dan Bootstrap. Kapan sebaiknya kita menggunakan Bootstrap daripada Tailwind, dan sebaliknya?
 
+Bootstrap adalah framework CSS yang sudah menyediakan berbagai komponen bawaan seperti navbar, dan lain-lain sehingga dapat langsung digunakan untuk tampilan aplikasi. Sedangkan Tailwind adalah framework CSS yang kita membangun tampilan dari kelas-kelas utilitas yang didefinisikan sebelumnya.
 
+Bootstrap sebaiknya digunakan daripada Tailwind ketika kita perlu membuat proyek dalam waktu cepat dan tidak perlu ada kustomisasi pada proyek yang dibuat. Maka Bootstrap dengan berbagai komponen bawaannya dapat membantu mempercepat pembuatan aplikasi.
+
+Sebaliknya, Tailwind sebaiknya digunakan daripada Bootstrap jika kita membutuhkan kustomisasi yang detail pada aplikasi yang dibuat. Dengan Tailwind, kita dapat membangun tampilan dengan kustomisasi yang dimau dengan kelas-kelas utilitas yang ada.
 
 # Tugas 4
 
