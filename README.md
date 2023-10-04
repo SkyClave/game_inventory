@@ -85,6 +85,28 @@ Untuk halaman daftar inventori, dibuat dengan approach card juga. Dibuat 2 conta
 ```
 Dibandingkan tugas lalu, tombol logout dan add item di bawah dipindahkan ke atas dan dimasukkan ke navbar bersama nama aplikasi dan username user yang login.
 
+## Pertanyaan
+
+### Jelaskan manfaat dari setiap element selector dan kapan waktu yang tepat untuk menggunakannya.
+- Element selector, untuk memilih elemen dengan tag tertentu. Ini berguna apabila kita ingin memberikan style yang sama pada elemen yang sama tagnya.
+- Class selector, untuk memilih elemen dengan class / karakteristik sama. Ini dapat digunakan apabila kita 
+
+
+### Jelaskan HTML5 Tag yang kamu ketahui.
+
+- ```<nav>``` untuk membuat page navigasi
+- ```<audio``` untuk menyisipkan audio dalam web.
+- ```<video>``` untuk memasukkan video ke dalam web.
+- ```<section>``` untuk mendefinisikan bagian-bagian dari satu halaman web. 
+
+### Jelaskan perbedaan antara margin dan padding.
+
+Padding mengosongkan area di sekitar konten, padding mengatur ada ruang kosong antara border dan konten dalam elemen. Sedangkan margin mengosongkan area di sekitar border. Margin mengatur jarak antara border satu elemen dengan elemen lainnya.
+
+### Jelaskan perbedaan antara framework CSS Tailwind dan Bootstrap. Kapan sebaiknya kita menggunakan Bootstrap daripada Tailwind, dan sebaliknya?
+
+
+
 # Tugas 4
 
 ## Proses implementasi checklist tugas
