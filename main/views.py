@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.core import serializers
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages  
 
@@ -37,7 +38,7 @@ def add_item(request, id):
         data.amount += 1
         data.save()
     finally:
-        return redirect('/')
+        return HttpResponse(status=200)
 
 @login_required(login_url='/login')
 def decrease_item(request, id):
@@ -46,18 +47,38 @@ def decrease_item(request, id):
         data.amount -= 1
         if data.amount <= 0:
             data.delete()
-            return redirect('/')
+            return HttpResponse(status=200)
         data.save()
     finally:
-        return redirect('/')
+        return HttpResponse(status=200)
 
 @login_required(login_url='/login')
+@csrf_exempt
 def remove_item(request, id):
     try:
         data = Item.objects.filter(user=request.user).filter(pk=id).first()
         data.delete()
     finally:
-        return redirect('/')
+        return HttpResponse(status=204)
+
+def get_item_json(request):
+    artifact_item = Item.objects.filter(user=request.user)
+    return HttpResponse(serializers.serialize('json', artifact_item))
+    
+@csrf_exempt
+def add_item_ajax(request):
+    if request.method == 'POST':
+        name = request.POST.get("name")
+        amount = request.POST.get("amount")
+        description = request.POST.get("description")
+        user = request.user
+
+        new_item = Item(name=name, amount=amount, description=description, user=user)
+        new_item.save()
+
+        return HttpResponse(b"CREATED", status=201)
+
+    return HttpResponseNotFound()
 
 def register(request):
     form = UserCreationForm()

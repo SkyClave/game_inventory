@@ -12,6 +12,9 @@
 					<li class="nav-item">
 						<a class="nav-link" href="{% url 'main:create_item' %}">Add Item</a>
 					</li>
+					<li class="nav-item">
+						<a class="nav-link" data-bs-toggle="modal" data-bs-target="#exampleModal">Add Artifact by AJAX</a>
+					</li>
 				</ul>
 				<div class="d-lg-flex col-lg-3 justify-content-lg-end">
 					<a class="nav-link" href="{% url 'main:logout' %}" <button class="btn btn-primary">Logout</button></a>
@@ -27,31 +30,120 @@
 				<p>Username : {{ nama }}</p>
 				<p>Last login: {{ last_login }}</p>
 				<p>Kelas : {{ kelas }}</p>
-				<p>Ada {{ item_counter }} jenis item dalam inventory {{ nama }}</p>
-				<p>Ada total {{ item_sum }} item dalam inventory {{ nama }}</p>
+				<p id="counter_item">Ada {{ item_counter }} jenis item dalam inventory</p>
+				<p id="counter_total">Ada total {{ item_sum }} item dalam inventory</p>
 			</div>
 		</div>
 	</div>
 	
 	<div class="container mt-5">
-		<div class="row">
-			{% for item in items %}
-			<div class="col-lg-4 mb-4">
-				<div class="card {% if forloop.last %}" style="color: gold;"{% endif %}">
-					<div class="card-body">
-						<h3 class="card-title">{{item.name}}<h3>
-						<p class="card-text">Amount : {{item.amount}}</p>
-						<p class="card-text">Description : {{item.description}}</p>
-					</div>
-					<div class="btn-group">
-						<a href="{% url 'main:add_item' item.id %}" class="btn btn-primary">+</a>
-						<a href="{% url 'main:decrease_item' item.id %}" class="btn btn-primary">-</a>
-						<a href="{% url 'main:remove_item' item.id %}" class="btn btn-danger">Remove</a>
-					</div>
+		<div class="row" id="daftar_item">
+		</div>
+	</div>
+	
+	<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="exampleModalLabel">Add New Product</h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body">
+					<form id="form" onsubmit="return false;">
+						{% csrf_token %}
+						<div class="mb-3">
+							<label for="name" class="col-form-label">Name:</label>
+							<input type="text" class="form-control" id="name" name="name"></input>
+						</div>
+						<div class="mb-3">
+							<label for="amount" class="col-form-label">Amount:</label>
+							<input type="number" class="form-control" id="amount" name="amount"></input>
+						</div>
+						<div class="mb-3">
+							<label for="description" class="col-form-label">Description:</label>
+							<textarea class="form-control" id="description" name="description"></textarea>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-primary" id="button_add" data-bs-dismiss="modal">Add Product</button>
 				</div>
 			</div>
-			{% endfor %}
 		</div>
 	</div>
 
+<script>
+    async function getItem() {
+        return fetch("{% url 'main:get_item_json' %}").then((res) => res.json())
+    }
+	async function refreshItem() {
+        document.getElementById("daftar_item").innerHTML = ""
+		document.getElementById("counter_item").innerHTML = ""
+		document.getElementById("counter_total").innerHTML = ""
+        const items = await getItem()
+        let htmlString = ``
+		let count = 0
+		let sum = 0
+        items.forEach((item) => {
+            htmlString += `<div class="col-lg-4 mb-4">
+				<div class="card {% if forloop.last %}" style="color: gold;"{% endif %}">
+					<div class="card-body">
+						<h3 class="card-title">${item.fields.name}<h3>
+						<p class="card-text">Amount : ${item.fields.amount}</p>
+						<p class="card-text">Description : ${item.fields.description}</p>
+					</div>
+					<div class="btn-group">
+						<a class="btn btn-primary" onclick="addOneItem(${item.pk})">+</a>
+						<a class="btn btn-primary" onclick="decreaseItem(${item.pk})">-</a>
+						<a class="btn btn-danger" onclick="deleteItem(${item.pk})">Remove</a>
+					</div>
+				</div>
+			</div>`
+			count += 1
+			sum += item.fields.amount
+        })
+        
+        document.getElementById("daftar_item").innerHTML = htmlString
+		document.getElementById("counter_item").innerHTML = `Ada ${count} jenis item dalam inventory`
+		document.getElementById("counter_total").innerHTML = `Ada total ${sum} item dalam inventory`
+    }
+
+    refreshItem()
+	
+	function addItem() {
+        fetch("{% url 'main:add_item_ajax' %}", {
+            method: "POST",
+            body: new FormData(document.querySelector('#form'))
+        }).then(refreshItem)
+
+        document.getElementById("form").reset()
+        return false
+    }
+	
+	document.getElementById("button_add").onclick = addItem
+	
+	function deleteItem(itemId) {
+		fetch(("/remove_item/" + itemId), {
+            method: "DELETE"
+        }).then(refreshItem)
+		return false
+	}
+	
+	function addOneItem(itemId) {
+		fetch(("/add_item/" + itemId), {
+            method: "GET"
+        }).then(refreshItem)
+		return false
+	}
+	
+	function decreaseItem(itemId) {
+		fetch(("/decrease_item/" + itemId), {
+            method: "GET"
+        }).then(refreshItem)
+		return false
+	}
+	
+</script>
 {% endblock content %}
+
