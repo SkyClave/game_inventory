@@ -1,3 +1,5 @@
+[Link Deploy](alwin-djuliansah-tugas.pbp.cs.ui.ac.id)
+
 # Tugas 6
 
 ## Proses implementasi checklist Tugas
@@ -31,7 +33,7 @@ Lalu pada main.html loop data item diubah menjadi kosong. Data-data yang mau diu
 		let sum = 0
         items.forEach((item) => {
             htmlString += `<div class="col-lg-4 mb-4">
-				<div class="card {% if forloop.last %}" style="color: gold;"{% endif %}">
+				<div class="card" ${index == items.length - 1 ? 'style="color: gold;"' : ''}>
 					<div class="card-body">
 						<h3 class="card-title">${item.fields.name}<h3>
 						<p class="card-text">Amount : ${item.fields.amount}</p>

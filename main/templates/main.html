@@ -85,9 +85,9 @@
         let htmlString = ``
 		let count = 0
 		let sum = 0
-        items.forEach((item) => {
+        items.forEach((item, index) => {
             htmlString += `<div class="col-lg-4 mb-4">
-				<div class="card {% if forloop.last %}" style="color: gold;"{% endif %}">
+				<div class="card" ${index == items.length - 1 ? 'style="color: gold;"' : ''}>
 					<div class="card-body">
 						<h3 class="card-title">${item.fields.name}<h3>
 						<p class="card-text">Amount : ${item.fields.amount}</p>
