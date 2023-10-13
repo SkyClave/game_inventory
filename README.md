@@ -1,4 +1,4 @@
-[Link Deploy](alwin-djuliansah-tugas.pbp.cs.ui.ac.id)
+[Link Aplikasi](http://alwin-djuliansah-tugas.pbp.cs.ui.ac.id)
 
 # Tugas 6
 
