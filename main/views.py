@@ -1,6 +1,7 @@
 import datetime
 from django.shortcuts import redirect, render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
+from django.contrib.auth.models import AnonymousUser
 from main.forms import ItemForm
 from main.models import Item
 from django.urls import reverse
@@ -9,7 +10,8 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib import messages  
+from django.contrib import messages
+import json
 
 # Create your views here.
 @login_required(login_url='/login')
@@ -153,3 +155,22 @@ def show_xml_by_id(request, id):
 def show_json_by_id(request, id):
     data = Item.objects.filter(pk=id)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
+
+@csrf_exempt
+def create_item_flutter(request):
+    if request.method == 'POST':
+        
+        data = json.loads(request.body)
+
+        new_item = Item.objects.create(
+            user = request.user,
+            name = data["name"],
+            amount = int(data["amount"]),
+            description = data["description"]
+        )
+
+        new_item.save()
+
+        return JsonResponse({"status": "success"}, status=200)
+    else:
+        return JsonResponse({"status": "error"}, status=401)
