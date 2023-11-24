@@ -1,7 +1,6 @@
 import datetime
 from django.shortcuts import redirect, render
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
-from django.contrib.auth.models import AnonymousUser
 from main.forms import ItemForm
 from main.models import Item
 from django.urls import reverse
@@ -145,7 +144,7 @@ def show_xml(request):
     return HttpResponse(serializers.serialize("xml", data), content_type="application/xml")
     
 def show_json(request):
-    data = Item.objects.all()
+    data = Item.objects.filter(user=request.user)
     return HttpResponse(serializers.serialize("json", data), content_type="application/json")
     
 def show_xml_by_id(request, id):
